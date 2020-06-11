@@ -60,28 +60,24 @@ float getAngle(float x, float y)
 
   // CHECK IF THE DISTANCE TO THE LEFT SIDE IS BIGGER
   // IF YES, MAKE THE ANGLE NEGATIVE, ADD AN OFFSET OF 30
-  if ((ult - inf) < 0)
-  {
+  if ((ult - inf) < 0) {
+    
     trueAngle = trueAngle * -1;
     trueAngle = trueAngle - 30;
-  }
-  else
-  {
+    
+  } else {
     trueAngle = trueAngle + 60;
   }
   
-  if (trueAngle > maxAngle)
-  {
+  if (trueAngle > maxAngle) {
     trueAngle = maxAngle;
   }
 
-  if (trueAngle < -1 * maxAngle)
-  {
+  if (trueAngle < -1 * maxAngle) {
     trueAngle = -1 * maxAngle;
   }
 
-  if (abs(trueAngle) < minAngle)
-  {
+  if (abs(trueAngle) < minAngle) {
     trueAngle = 0;
   }
 
@@ -89,21 +85,17 @@ float getAngle(float x, float y)
   return angle;
 } // END
 
-bool isTurn(int x, int y)
-{
+bool isTurn(int x, int y) {
   int sum = x + y;
   if (sum > 525) return true;
   return false; 
 } // END
 
-void turnFan(float angle, float previousAngle)
-{
+void turnFan(float angle, float previousAngle) {
   if (angle < previousAngle + 1) myServo.write(angle);
 
-  if(angle > previousAngle - 1)
-  {
-    for (int i = previousAngle; i <= int(angle); i++)
-    {
+  if(angle > previousAngle - 1) {
+    for (int i = previousAngle; i <= int(angle); i++) {
       delay(3);
       myServo.write(i);
     } // END FOR LOOP
@@ -126,13 +118,11 @@ void loop() {
   infraReadings[pos] = readInfra();
   ultraReadings[pos] = readUltra();
 
-  if (ultraReadings[pos] > 3000 || infraReadings[pos] > 3000)
-  {
+  if (ultraReadings[pos] > 3000 || infraReadings[pos] > 3000) {
     goto skip;
   } //END
 
-  for (int i = 0; i < SIZE; i++)
-  {
+  for (int i = 0; i < SIZE; i++) {
     sumInfra = sumInfra + infraReadings[i];
     sumUltra = sumUltra + ultraReadings[i];
   } // END
@@ -140,15 +130,11 @@ void loop() {
   angle = getAngle(sumInfra, sumUltra);
   turning = isTurn(sumInfra / SIZE, sumUltra / SIZE);
 
-  if (turning == true)
-  {
+  if (turning == true) {
     turnFan(angle, previousAngle);
-  } // END
-
-  else if (turning == false)
-  {
+  } else if (turning == false) {
     myServo.write(70);
-  } // END
+  } 
 
   sumUltra = 0;
   sumInfra = 0;
